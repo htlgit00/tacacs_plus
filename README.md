@@ -18,23 +18,26 @@ operating systems.
 ```
 $ pip install tacacs_plus
 
-$ tacacs_client -u myuser -H localhost authenticate
-$ tacacs_client -u myuser -H localhost authenticate -t pap
-$ tacacs_client -u myuser -H localhost -v authenticate -t chap
+$ tacacs_client -u myUser -H myTplusSrv -k myKey authenticate
+$ tacacs_client -u myUser -H myTplusSrv -k myKey authenticate -t pap
+$ tacacs_client -u myUser -H myTplusSrv -k myKey -v authenticate -t chap
 status: PASS
 
-$ tacacs_client -u myuser -H localhost authorize -c service=shell cmd=show cmdarg=version
-$ tacacs_client -u myuser -H localhost -v authorize -t pap -c service=shell cmd=show cmdarg=version
+$ tacacs_client -u myUser -H myTplusSrv -k myKey authorize -c service=shell cmd=show cmd-arg=version
+$ tacacs_client -u myUser -H myTplusSrv -k myKey -v authorize -t pap -c service=shell cmd=show cmd-arg=version
 status: PASS
 
-$ tacacs_client -u myuser -H localhost -v authorize -t pap -c service=junos-exec
+$ tacacs_client -u myUser -H myTplusSrv -k myKey -v authorize -c service=shell cmd=interface cmd-arg=GigabitEthernet cmd-arg=0
+status: PASS
+
+$ tacacs_client -u myUser -H myTplusSrv -k myKey -v authorize -t pap -c service=junos-exec
 status: REPL
 av-pairs:
     allow-commands=^acommandregex$
     deny-commands=^anothercommandregex$
 
-$ tacacs_client -u myuser -H localhost account -f start -c service=shell cmd=show cmdarg=version
-$ tacacs_client -u myuser -H localhost account -f stop -c service=shell cmd=show cmdarg=version
+$ tacacs_client -u myUser -H myTplusSrv -k myKey account -f start -c service=shell cmd=show cmd-arg=version
+$ tacacs_client -u myUser -H myTplusSrv -k myKey account -f stop -c service=shell cmd=show cmd-arg=version
 
 $ tacacs_client -h
 usage: tacacs_client [-h] -u USERNAME -H HOST [-p PORT] [-l PRIV_LVL]
@@ -124,15 +127,15 @@ authen = cli.authenticate('username', 'password')
 print("PASS!" if authen.valid else "FAIL!")
 
 # authorize user and command
-author = cli.authorize('username', arguments=[b"service=shell", b"cmd=show", b"cmdargs=version"])
+author = cli.authorize('username', arguments=[b"service=shell", b"cmd=show", b"cmd-arg=version"])
 print("PASS!" if author.valid else "FAIL!")
 
 # start accounting session for command
-acct = cli.account('username', TAC_PLUS_ACCT_FLAG_START, arguments=[b"service=shell", b"cmd=show", b"cmdargs=version"])
+acct = cli.account('username', TAC_PLUS_ACCT_FLAG_START, arguments=[b"service=shell", b"cmd=show", b"cmd-arg=version"])
 print("PASS!" if acct.valid else "FAIL!")
 
 # continue accounting session for another command
-acct = cli.account('username', TAC_PLUS_ACCT_FLAG_WATCHDOG, arguments=[b"service=shell", b"cmd=debug", b"cmdargs=aaa"])
+acct = cli.account('username', TAC_PLUS_ACCT_FLAG_WATCHDOG, arguments=[b"service=shell", b"cmd=debug", b"cmd-arg=aaa"])
 print("PASS!" if acct.valid else "FAIL!")
 
 # close accounting session
