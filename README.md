@@ -19,9 +19,17 @@ operating systems.
 $ pip install tacacs_plus
 
 $ tacacs_client -u myUser -H myTplusSrv -k myKey authenticate
-$ tacacs_client -u myUser -H myTplusSrv -k myKey authenticate -t pap
-$ tacacs_client -u myUser -H myTplusSrv -k myKey -v authenticate -t chap
+$ tacacs_client -u myUser -H myTplusSrv -k myKey -t pap authenticate
+$ tacacs_client -u myUser -H myTplusSrv -k myKey -t pap -v authenticate
 status: PASS
+$ tacacs_client -u myUser -H myTplusSrv -k myKey -t pap -v authenticate -p myUserPassword
+status: PASS
+
+$ tacacs_client -u myUser -H myTplusSrv -k myKey -t pap -v authorize -c service=exec
+status: PASS
+av-pairs:
+  autocmd=myAutoCmd
+  priv-lvl=15
 
 $ tacacs_client -u myUser -H myTplusSrv -k myKey authorize -c service=shell cmd=show cmd-arg=version
 $ tacacs_client -u myUser -H myTplusSrv -k myKey -v authorize -t pap -c service=shell cmd=show cmd-arg=version
